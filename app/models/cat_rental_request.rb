@@ -16,8 +16,9 @@ class CatRentalRequest < ActiveRecord::Base
     self.status ||= "PENDING"
   end
 
-  validates :status, inclusion: { in: %w(PENDING APPROVED DENIED), message: "%{value} is not a valid status" }
-  validate :no_overlapping_requests
+  validates :status, inclusion: { in: %w(PENDING APPROVED DENIED),
+                                  message: "%{value} is not a valid status" }
+  validate :no_overlapping_approved_requests
 
   belongs_to :cat
 
@@ -37,24 +38,39 @@ class CatRentalRequest < ActiveRecord::Base
     self.save!
   end
 
+  def denied?
+    self.status == "DENIED"
+  end
+
   def pending?
     self.status == "PENDING"
   end
 
   private
-  def no_overlapping_requests
-    unless overlapping_approved_requests.empty? ||
-      (overlapping_approved_requests.include?(self) && overlapping_approved_requests.length == 1)
+  def no_overlapping_approved_requests
+    return if self.denied?
+
+    unless overlapping_approved_requests.empty?
         errors[:overlapping_request] << "Cannot overlap an already approved request!"
     end
   end
 
   def overlapping_requests
-    condition = "cat_id = #{self.cat_id} AND
-      ((DATE '#{self.start_date}', DATE '#{self.end_date}') OVERLAPS
+    condition = "cat_id = :cat_id AND
+      ((DATE :start_date, DATE :end_date) OVERLAPS
       (cat_rental_requests.start_date, cat_rental_requests.end_date))"
 
-    CatRentalRequest.where(condition)
+    overlapping_requests = CatRentalRequest.where(condition, {
+      cat_id: self.cat_id,
+      start_date: self.start_date,
+      end_date: self.end_date
+    })
+
+    if self.id.nil?
+      overlapping_requests
+    else
+      overlapping_requests.where("id != ?", self.id)
+    end
   end
 
   def overlapping_approved_requests

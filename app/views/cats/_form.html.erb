@@ -1,18 +1,30 @@
 <%= render :partial => "layouts/errors" %>
-<form action="<%= @cat.persisted? ? cat_url(@cat) : cats_url %>" method="post" accept-charset="utf-8">
+<form action="<%= @cat.persisted? ? cat_url(@cat) : cats_url %>"
+      method="post" accept-charset="utf-8">
+
   <% if @cat.persisted? %>
     <input type="hidden" name="_method" value="PATCH" />
   <% end %>
-  <p><label for="cat[name]">Name:</label>
-  <input type="text" name="cat[name]" id="cat[name]" value="<%= @cat.name %>"></p>
 
-  <p><label for="cat[age]">Age:</label>
-  <input type="text" name="cat[age]" id="cat[age]" value="<%= @cat.age %>"></p>
+  <p>
+    <label for="cat[name]">Name:</label>
+    <input type="text" name="cat[name]" id="cat[name]" value="<%= @cat.name %>">
+  </p>
 
-  <p><input type="radio" name="cat[sex]" id="cat_sex_female" value="F" <%= "checked" if @cat.sex == "F" %>>
-  <label for="cat_sex_female">Female</label>
-  <input type="radio" name="cat[sex]" id="cat_sex_male" value="M" <%= "checked" if @cat.sex == "M" %>>
-  <label for="cat_sex_male">Male</label></p>
+  <p>
+    <label for="cat[age]">Age:</label>
+    <input type="text" name="cat[age]" id="cat[age]" value="<%= @cat.age %>">
+  </p>
+
+  <p>
+    <input type="radio" name="cat[sex]" id="cat_sex_female" value="F"
+           <%= "checked" if @cat.sex == "F" %>>
+    <label for="cat_sex_female">Female</label>
+
+    <input type="radio" name="cat[sex]" id="cat_sex_male" value="M"
+           <%= "checked" if @cat.sex == "M" %>>
+    <label for="cat_sex_male">Male</label>
+  </p>
 
   <p><label for="cat_coat_color">Coat Color:</label>
     <select name="cat[color]" id="cat_coat_color">
@@ -25,9 +37,11 @@
     </select>
   </p>
 
-  <p><label for="cat[birth_date]">Birthday:</label>
-    <input type="date" name="cat[birth_date]" id="cat[birth_date]" value="<%= @cat.birth_date %>"></p>
-
+  <p>
+    <label for="cat[birth_date]">Birthday:</label>
+    <input type="date" name="cat[birth_date]" id="cat[birth_date]"
+           value="<%= @cat.birth_date %>">
+  </p>
 
   <p><input type="submit"></p>
 </form>
