@@ -10,15 +10,17 @@
 #  sex        :string(255)      not null
 #  created_at :datetime
 #  updated_at :datetime
+#  user_id    :integer
 #
 
 class Cat < ActiveRecord::Base
   COLORS = ["black", "white", "tortoise shell", "calico", "grey", "orange"]
   validate :color_included, :valid_sex
-  validates :age, :birth_date, :color, :name, :sex, presence: true
+  validates :age, :birth_date, :color, :name, :sex, :user_id, presence: true
   validates :age, numericality: { only_integer: true }
 
   has_many :cat_rental_requests, dependent: :destroy
+  belongs_to :user
 
   def valid_sex
     errors[:sex] << "Must choose either M or F for sex" unless ['M', 'F'].include?(self.sex)

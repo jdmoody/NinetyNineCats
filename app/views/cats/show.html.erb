@@ -27,7 +27,7 @@
     <tr>
       <td>Start date: <%= request.start_date %></td>
       <td>End date: <%= request.end_date %></td>
-      <% if request.pending? %>
+      <% if request.pending? && current_user.id == request.cat.user_id %>
         <td>
           <%= button_to "Approve Request",
               cat_rental_request_approve_url(request) %>

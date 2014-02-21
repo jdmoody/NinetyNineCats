@@ -12,6 +12,7 @@
 #
 
 class CatRentalRequest < ActiveRecord::Base
+  validates :cat_id, :start_date, :end_date, presence: true
   before_validation(on: :create) do
     self.status ||= "PENDING"
   end
@@ -49,6 +50,7 @@ class CatRentalRequest < ActiveRecord::Base
   private
   def no_overlapping_approved_requests
     return if self.denied?
+    return if [start_date, end_date].any?(&:blank?)
 
     unless overlapping_approved_requests.empty?
         errors[:overlapping_request] << "Cannot overlap an already approved request!"

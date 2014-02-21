@@ -1,5 +1,6 @@
 class CatRentalRequestsController < ApplicationController
-  before_filter :set_cat_rental_request, only: [:show, :update, :destroy]
+  before_action :set_cat_rental_request, only: [:show, :update, :destroy, :approve, :deny]
+  before_action :verify_owner, only: [:approve, :deny]
 
   def new
     @cats = Cat.all
@@ -19,14 +20,12 @@ class CatRentalRequestsController < ApplicationController
   end
 
   def approve
-    @cat_rental_request = CatRentalRequest.find(params[:cat_rental_request_id])
     @cat_rental_request.approve!
     @cat = @cat_rental_request.cat
     redirect_to cat_url(@cat)
   end
 
   def deny
-    @cat_rental_request = CatRentalRequest.find(params[:cat_rental_request_id])
     @cat = @cat_rental_request.cat
     @cat_rental_request.deny!
     redirect_to cat_url(@cat)
@@ -34,10 +33,17 @@ class CatRentalRequestsController < ApplicationController
 
   private
   def set_cat_rental_request
-    @cat_rental_request = CatRentalRequest.find(params[:id])
+    @cat_rental_request = CatRentalRequest.find(params[:cat_rental_request_id])
   end
 
   def cat_rental_request_params
     params.require(:cat_rental_request).permit(:cat_id, :start_date, :end_date, :status)
+  end
+
+  def verify_owner
+    unless @cat_rental_request.cat.user_id == current_user.id
+      flash[:errors] = ["Can only approve/deny for cats you own!"]
+      redirect_to cats_url
+    end
   end
 end

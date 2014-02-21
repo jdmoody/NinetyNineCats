@@ -1,8 +1,12 @@
-<%= render :partial => "layouts/errors" %>
 <h1>Create a new rental request</h1>
 
 <form action="<%= cat_rental_requests_url %>"
       method="post" accept-charset="utf-8">
+
+  <input
+    name="authenticity_token"
+    type="hidden"
+    value="<%= form_authenticity_token %>">
 
   <p>
     <label for="cat_choice">Choose a cat:</label>
