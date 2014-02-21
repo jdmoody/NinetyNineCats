@@ -6,9 +6,9 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-cat1 = Cat.create!(age: 2, birth_date: "2013-01-31",
-                   color: "tortoise shell", name: "Gizmo", sex: "M")
-cat2 = Cat.create!(age: 1, birth_date: "2013-02-28",
-                   color: "black", name: "Breakfast", sex: "F")
-
-catrental1 = CatRentalRequest.create!(cat_id: 1, start_date: "January 8, 2013", end_date: "February 8, 2014", status: "PENDING")
+# cat1 = Cat.create!(age: 2, birth_date: "2013-01-31",
+#                    color: "tortoise shell", name: "Gizmo", sex: "M")
+# cat2 = Cat.create!(age: 1, birth_date: "2013-02-28",
+#                    color: "black", name: "Breakfast", sex: "F")
+#
+# catrental1 = CatRentalRequest.create!(cat_id: 1, start_date: "January 8, 2013", end_date: "February 8, 2014", status: "PENDING")

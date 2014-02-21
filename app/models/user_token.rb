@@ -11,6 +11,12 @@
 
 class UserToken < ActiveRecord::Base
   validates :session_token, presence: true, uniqueness: true
+  validates :user_id, presence: true
 
   belongs_to :user
+
+  def self.remove_token(token)
+    user_token = UserToken.find_by(session_token: token)
+    user_token.destroy
+  end
 end

@@ -5,7 +5,6 @@
 #  id              :integer          not null, primary key
 #  user_name       :string(255)      not null
 #  password_digest :string(255)      not null
-#  session_token   :string(255)      not null
 #  created_at      :datetime
 #  updated_at      :datetime
 #
@@ -13,7 +12,7 @@
 class User < ActiveRecord::Base
   validates :password, length: { minimum: 6, allow_nil: true }
   validates :user_name, presence: true, uniqueness: true
-  validates :session_token, presence: true, uniqueness: true
+
   attr_reader :password
 
   has_many :cats
@@ -23,14 +22,13 @@ class User < ActiveRecord::Base
   :foreign_key => :user_id,
   :primary_key => :id)
 
-  before_validation(on: :create) do
-    self.session_token ||= SecureRandom.urlsafe_base64(16)
-  end
-
   def reset_session_token!
-    self.session_token = SecureRandom.urlsafe_base64(16)
-    self.save!
-    self.session_token
+    new_session_token = SecureRandom.urlsafe_base64(16)
+
+    token = UserToken.new(user_id: self.id)
+    token.session_token = new_session_token
+    token.save!
+    token.session_token
   end
 
   def password=(unencrypted_password)
